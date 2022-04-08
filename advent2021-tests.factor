@@ -12,5 +12,7 @@ IN: advent2021.tests
 { { t f f t } }
 [ { { 4 5 } { 5 4 } { 9 8 } { 9 10 } } [ ascending? ] map ] unit-test
 
-{ 7 } [ "vocab:advent2021/day01.example.txt" day01 ] unit-test
-{ 1709 } [ "vocab:advent2021/day01.data.txt" day01 ] unit-test
+{ 7 } [ "vocab:advent2021/day01.example.txt" day01a ] unit-test
+{ 1709 } [ "vocab:advent2021/day01.data.txt" day01a ] unit-test
+
+{ 5 } [ "vocab:advent2021/day01.example.txt" day01b ] unit-test

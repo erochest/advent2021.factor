@@ -11,6 +11,15 @@ IN: advent2021
 
 : only-t ( seq -- seq ) [ ] filter ;
 
-: day01 ( path -- increasing-count )
-    read01 >pairs [ ascending? ] map only-t length ;
+: count-t ( seq -- n ) only-t length ;
+
+: day01a ( path -- increasing-count )
+    read01 >pairs [ ascending? ] map count-t ;
+
+: >windows ( seq -- seq ) 3 clump ;
+
+: sum ( seq -- n ) [ 0 [ + ] reduce ] map ;
+
+: day01b ( path -- increasing-window-count )
+    read01 >windows sum >pairs [ ascending? ] map count-t ;
 
