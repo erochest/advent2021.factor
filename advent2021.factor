@@ -1,7 +1,7 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: arrays grouping io.encodings.utf8 io.files kernel math math.parser
-sequences splitting vectors ;
+USING: arrays assocs grouping io.encodings.utf8 io.files kernel math math.parser
+namespaces sequences splitting vectors ;
 IN: advent2021
 
 : read01 ( path -- seq )   utf8 file-lines [ string>number ] map ;
@@ -17,13 +17,9 @@ IN: advent2021
 : day01b ( path -- increasing-window-count )
     read01 >windows sum >pairs [ ascending? ] map count-t ;
 
-: parse-direction ( string -- n )
-    dup "forward" = [ drop 0 ] [
-        dup "down" = [ drop 1 ] [
-            "up" = [ 2 ] [ -1 ] if
-        ] if
-    ] if
-    ;
+SYMBOL: +direction-codes+
+H{ { "forward" 0 } { "down" 1 } { "up" 2 } } +direction-codes+ set-global
+: parse-direction ( string -- n ) +direction-codes+ get-global at ;
 : parse-sub-command ( string -- pair )
     " " split [ first parse-direction ] [ second string>number ] bi 2array ;
 : read02 ( path -- seq ) utf8 file-lines [ parse-sub-command ] map ;
