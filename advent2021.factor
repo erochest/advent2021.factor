@@ -1,6 +1,7 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: grouping io.encodings.utf8 io.files kernel math math.parser sequences vectors ;
+USING: arrays grouping io.encodings.utf8 io.files kernel math math.parser
+sequences splitting vectors ;
 IN: advent2021
 
 : read01 ( path -- seq )   utf8 file-lines [ string>number ] map ;
@@ -16,3 +17,13 @@ IN: advent2021
 : day01b ( path -- increasing-window-count )
     read01 >windows sum >pairs [ ascending? ] map count-t ;
 
+: parse-direction ( string -- n )
+    dup "forward" = [ drop 0 ] [
+        dup "down" = [ drop 1 ] [
+            "up" = [ 2 ] [ -1 ] if
+        ] if
+    ] if
+    ;
+: parse-sub-command ( string -- pair )
+    " " split [ first parse-direction ] [ second string>number ] bi 2array ;
+: read02 ( path -- seq ) utf8 file-lines [ parse-sub-command ] map ;

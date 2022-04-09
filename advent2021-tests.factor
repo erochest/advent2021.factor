@@ -16,3 +16,10 @@ IN: advent2021.tests
 { 1709 } [ "vocab:advent2021/day01.data.txt" day01a ] unit-test
 
 { 5 } [ "vocab:advent2021/day01.example.txt" day01b ] unit-test
+
+{ { 0 5 } } [ "forward 5" parse-sub-command ] unit-test
+{ { 1 8 } } [ "down 8" parse-sub-command ] unit-test
+{ { 2 3 } } [ "up 3" parse-sub-command ] unit-test
+
+{ { { 0 5 } { 1 5 } { 0 8 } { 2 3 } { 1 8 } { 0 2 } } }
+[ "vocab:advent2021/day02.example.txt" read02 ] unit-test
