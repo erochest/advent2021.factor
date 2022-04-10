@@ -39,3 +39,16 @@ unit-test
 
 { 150 } [ "vocab:advent2021/day02.example.txt" day02a ] unit-test
 { 1727835 } [ "vocab:advent2021/day02.data.txt" day02a ] unit-test
+
+{ { 3 4 5 } } [ 3 4 5 submarine boa submarine->array ] unit-test
+
+{ { 0 0 3 } } [ <submarine> 3 down-sub submarine->array ] unit-test
+{ { 0 0 -4 } } [ <submarine> 4 up-sub submarine->array ] unit-test
+{ { 4 12 3 } } [ 0 0 3 submarine boa 4 forward-sub submarine->array ] unit-test
+
+! product
+{ 0 } [ { 0 1 2 3 } product ] unit-test
+{ 6 } [ { 1 2 3 } product ] unit-test
+
+{ 900 } [ "vocab:advent2021/day02.example.txt" day02b ] unit-test
+{ 1544000595 } [ "vocab:advent2021/day02.data.txt" day02b ] unit-test
