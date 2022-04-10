@@ -1,6 +1,6 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: tools.test advent2021 arrays math.ranges sequences ;
+USING: tools.test advent2021 accessors arrays kernel math.ranges sequences ;
 IN: advent2021.tests
 
 { { 199 200 208 210 200 207 240 269 260 263 } }
@@ -17,9 +17,25 @@ IN: advent2021.tests
 
 { 5 } [ "vocab:advent2021/day01.example.txt" day01b ] unit-test
 
-{ { 0 5 } } [ "forward 5" parse-sub-command ] unit-test
-{ { 1 8 } } [ "down 8" parse-sub-command ] unit-test
-{ { 2 3 } } [ "up 3" parse-sub-command ] unit-test
+{ 5 0 } [ <position> 5 forward dump-position ] unit-test
+{ 0 8 } [ <position> 8 down dump-position ] unit-test
+{ 0 -3 } [ <position> 3 up dump-position ] unit-test
 
-{ { { 0 5 } { 1 5 } { 0 8 } { 2 3 } { 1 8 } { 0 2 } } }
-[ "vocab:advent2021/day02.example.txt" read02 ] unit-test
+{ 5 0 } [ <position> 5 "forward" parse-direction curry call dump-position ] unit-test
+{ 0 8 } [ <position> 8 "down" parse-direction curry call dump-position ] unit-test
+{ 0 -3 } [ <position> 3 "up" parse-direction curry call dump-position ] unit-test
+
+{ 5 0 } [ <position> "forward 5" parse-sub-command call dump-position ] unit-test
+{ 0 8 } [ <position> "down 8" parse-sub-command call dump-position ] unit-test
+{ 0 -3 } [ <position> "up 3" parse-sub-command call dump-position ] unit-test
+
+{ 5 5 }
+[
+    <position>
+    { "forward 5" "down 8" "up 3" } [ parse-sub-command ] map
+    exec-commands dump-position
+]
+unit-test
+
+{ 150 } [ "vocab:advent2021/day02.example.txt" day02a ] unit-test
+{ 1727835 } [ "vocab:advent2021/day02.data.txt" day02a ] unit-test
