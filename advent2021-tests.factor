@@ -3,20 +3,6 @@
 USING: tools.test advent2021 accessors arrays kernel math.ranges sequences ;
 IN: advent2021.tests
 
-{ { 199 200 208 210 200 207 240 269 260 263 } }
-[ "vocab:advent2021/day01.example.txt" read01 ] unit-test
-
-{ { { 1 2 } { 2 3 } { 3 4 } { 4 5 } { 5 6 } } }
-[ 6 [1,b] >pairs [ >array ] map ] unit-test
-
-{ { t f f t } }
-[ { { 4 5 } { 5 4 } { 9 8 } { 9 10 } } [ ascending? ] map ] unit-test
-
-{ 7 } [ "vocab:advent2021/day01.example.txt" day01a ] unit-test
-{ 1709 } [ "vocab:advent2021/day01.data.txt" day01a ] unit-test
-
-{ 5 } [ "vocab:advent2021/day01.example.txt" day01b ] unit-test
-
 { 5 0 } [ <position> 5 forward dump-position ] unit-test
 { 0 8 } [ <position> 8 down dump-position ] unit-test
 { 0 -3 } [ <position> 3 up dump-position ] unit-test
