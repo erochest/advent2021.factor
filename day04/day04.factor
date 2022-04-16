@@ -1,14 +1,30 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: io.encodings.utf8 io.files kernel math math.parser
+USING: arrays io.encodings.utf8 io.files kernel locals math math.parser
 sequences splitting ;
 IN: advent2021.day04
 
-: boards>play-boards ( board-seq -- play-board-seq ) ;
+:: inc-nth ( n seq -- ) n seq nth 1 + n seq set-nth ;
+: cursor-next-row ( pair -- ) 0 over inc-nth -1 1 rot set-nth ;
+: cursor-next-col ( pair -- ) 1 swap inc-nth ;
+
+! a play-board-seq indexes each item with an array of completion zones.
+:: board>play-board ( board-seq -- play-board-seq )
+    30 f <array> :> play-board-seq
+    -1 -1 2array board-seq [
+        [ dup cursor-next-row ] dip
+        [
+            [ dup cursor-next-col dup clone ] dip
+            play-board-seq set-nth
+        ] each
+    ] each
+    drop
+    play-board-seq
+    ;
 
 TUPLE: bingo-game boards moves-left play-boards last-move winning ;
 : <bingo-game> ( boards moves-left -- bingo-game )
-    over boards>play-boards f f bingo-game boa ;
+    over [ board>play-board ] map f f bingo-game boa ;
 
 : parse-moves ( string -- number-seq ) "," split [ string>number ] map ;
 : parse-board ( string-seq -- bingo-board )
