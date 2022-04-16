@@ -28,3 +28,9 @@ unit-test
 
 { 198 } [ "vocab:advent2021/day03/example.txt" day03a ] unit-test
 { 4191876 } [ "vocab:advent2021/day03/data.txt" day03a ] unit-test
+
+{ 23 } [ { 4 30 22 23 21 15 7 28 16 25 2 10 } oxygen-rating ] unit-test
+{ 10 } [ { 4 30 22 23 21 15 7 28 16 25 2 10 } co2-scrubber ] unit-test 
+
+{ 230 } [ "vocab:advent2021/day03/example.txt" day03b ] unit-test
+{ 3414905 } [ "vocab:advent2021/day03/data.txt" day03b ] unit-test
