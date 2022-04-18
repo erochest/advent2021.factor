@@ -1,7 +1,7 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors arrays io io.encodings.utf8 io.files kernel locals math math.parser
-prettyprint sequences splitting ;
+prettyprint sequences sequences.generalizations splitting combinators.short-circuit ;
 IN: advent2021.day04
 
 :: inc-nth ( n seq -- ) n seq nth 1 + n seq set-nth ;
@@ -22,13 +22,47 @@ IN: advent2021.day04
     play-board-seq
     ;
 
-! TODO: refactor so the a board includes all the info for that board
-TUPLE: bingo-game boards moves-left play-boards hits last-move winning ;
-: <bingo-game> ( boards moves-left -- bingo-game )
-    over [ board>play-board ] map
+TUPLE: bingo-board board play hits ;
+: <bingo-board> ( board -- bingo-board )
+    dup board>play-board
     5 0 <array> 5 0 <array> 2array
-    f f
-    bingo-game boa ;
+    bingo-board boa ;
+
+: winning? ( board -- ? )
+    hits>>
+    { [ first [ 5 = ] any? ] [ second [ 5 = ] any? ] }
+    1|| ;
+
+: mark-square ( board move -- pair )
+    ! "mark-square" print .s nl
+    [ play>> ] dip
+    [ swap nth ] 2keep
+    f swap rot set-nth
+    ;
+: incr-col-hit ( hits col -- )
+    ! "incr-col-hit" print .s nl
+    [ first ] dip 
+    [ over nth ] keep
+    [ 1 + ] dip
+    rot set-nth ;
+: incr-row-hit ( hits col -- )
+    ! "incr-row-hit" print .s nl
+    [ second ] dip
+    [ over nth ] keep
+    [ 1 + ] dip
+    rot set-nth ;
+: make-move ( board move -- )
+    ! "make-move" print .s nl
+    dupd mark-square
+    [ hits>> ] dip
+    [ first ] [ second ] bi
+    overd incr-row-hit
+    incr-col-hit 
+    ;
+
+TUPLE: bingo-game boards moves-left last-move winning ;
+: <bingo-game> ( boards moves-left -- bingo-game )
+    [ [ <bingo-board> ] map ] dip f f bingo-game boa ;
 
 : parse-moves ( string -- number-seq ) "," split [ string>number ] map ;
 : parse-board ( string-seq -- bingo-board )
@@ -47,50 +81,44 @@ TUPLE: bingo-game boards moves-left play-boards hits last-move winning ;
     [ >>moves-left ] dip
     [ >>last-move ] keep
     nip ;
-: incr-col-hit ( hits col -- )
-    ! "incr-col-hit" print .s nl
-    [ first ] dip 
-    [ over nth ] keep
-    [ 1 + ] dip
-    rot set-nth ;
-: incr-row-hit ( hits col -- )
-    ! "incr-row-hit" print .s nl
-    [ second ] dip
-    [ over nth ] keep
-    [ 1 + ] dip
-    rot set-nth ;
-:: mark-hits ( move game -- )
-    ! "mark-hits" print .s nl
-    game hits>> :> hits
-    game play-boards>> [ move swap nth ] map :> pairs
-    pairs length 1 -
-    [ dup 0 >= ] [
-        ! pair hits pair-0 ! index
-        [ pairs nth ] keep
-        [
-            hits over first incr-col-hit
-            hits swap second incr-row-hit
-        ] dip
-        ! "in while" print .s nl
-        1 -
-    ] while
+! :: mark-hits ( move game -- )
+!     ! "mark-hits" print .s nl
+!     game hits>> :> hits
+!     game play-boards>> [ move swap nth ] map :> pairs
+!     pairs length 1 -
+!     [ dup 0 >= ] [
+!         ! pair hits pair-0 ! index
+!         [ pairs nth ] keep
+!         [
+!             hits over first incr-col-hit
+!             hits swap second incr-row-hit
+!         ] dip
+!         ! "in while" print .s nl
+!         1 -
+!     ] while
+!     drop
+!     ;
+! : mark-number ( move game -- )
+!     ! "mark-number" print .s nl
+!     f -rot
+!     play-boards>> [
+!         [ set-nth ] 3keep drop
+!     ] each
+!     2drop ;
+:: make-game-move ( game -- )
+    ! "make-game-move" print .s nl
+    game update-moves :> move
+    game boards>> [ move make-move ] each
+    game boards>> [ winning? ] filter
+    dup [ length zero? ] [ drop f ] [ first ] if
+    game winning<<
     drop
     ;
-: mark-number ( move game -- )
-    ! "mark-number" print .s nl
-    f -rot
-    play-boards>> [
-        [ set-nth ] 3keep drop
-    ] each
-    2drop ;
-:: make-move ( game -- )
-    ! "make-move" print .s nl
-    game update-moves :> move
-    move game mark-hits
-    move game mark-number
-    ;
 
-: play-to-win ( bingo-game -- bingo-game ) ;
+: play-to-win ( bingo-game -- bingo-game )
+    [ dup winning>> not ] [
+        dup make-game-move
+    ] while ;
 
 : get-winning-board ( bingo-game -- bingo-board ) ;
 : get-last-called ( bingo-game -- n ) ;

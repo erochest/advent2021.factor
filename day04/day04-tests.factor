@@ -47,19 +47,19 @@ IN: advent2021.day04.tests
     { 21  9 14 16  7 }
     {  6 10  3 18  5 }
     {  1 12 20 15 19 } } }
-[ "vocab:advent2021/day04/example.txt" read04a boards>> first ] unit-test
+[ "vocab:advent2021/day04/example.txt" read04a boards>> first board>> ] unit-test
 { { {  3 15  0  2 22 }
     {  9 18 13 17  5 }
     { 19  8  7 25 23 }
     { 20 11 10 24  4 }
     { 14 21 16 12  6 } } }
-[ "vocab:advent2021/day04/example.txt" read04a boards>> second ] unit-test
+[ "vocab:advent2021/day04/example.txt" read04a boards>> second board>> ] unit-test
 { { { 14 21 17 24  4 }
     { 10 16 15  9 19 }
     { 18  8 23 26 20 }
     { 22 11 13  6  5 }
     {  2  0 12  3  7 } } }
-[ "vocab:advent2021/day04/example.txt" read04a boards>> third ] unit-test
+[ "vocab:advent2021/day04/example.txt" read04a boards>> third board>> ] unit-test
 
 { { { 0 4 } { 4 0 } { 1 1 } { 3 2 } { 1 3 }
     { 3 4 } { 3 0 } { 2 4 } { 1 0 } { 2 1 }
@@ -67,7 +67,12 @@ IN: advent2021.day04.tests
     { 4 3 } { 2 3 } { 0 2 } { 3 3 } { 4 4 }
     { 4 2 } { 2 0 } { 0 0 } { 1 2 } { 1 4 }
     f       f       f       f       f       } }
-[ "vocab:advent2021/day04/example.txt" read04a play-boards>> first ] unit-test
+[ "vocab:advent2021/day04/example.txt" read04a boards>> first play>> ] unit-test
+
+{ f } [ f f { { 0 0 0 0 0 } { 0 0 0 0 0 } } bingo-board boa winning? ] unit-test
+{ f } [ f f { { 0 1 0 3 0 } { 0 2 4 0 0 } } bingo-board boa winning? ] unit-test
+{ t } [ f f { { 0 1 5 3 0 } { 0 2 4 0 0 } } bingo-board boa winning? ] unit-test
+{ t } [ f f { { 0 1 0 3 0 } { 5 2 4 0 0 } } bingo-board boa winning? ] unit-test
 
 : make-move-fixture ( -- bingo-game )
     { { { 22 13 17 11  0 }
@@ -77,18 +82,18 @@ IN: advent2021.day04.tests
         {  1 12 20 15 19 } } }
     { 7 4 9 5 11 17 }
     <bingo-game> ;
-! !!!!!!!! make-move
-{ { 4 9 5 11 17 } } [ make-move-fixture dup make-move moves-left>> ] unit-test
-{ 7 } [ make-move-fixture dup make-move last-move>> ] unit-test
-{ { { { 0 4 } { 4 0 } { 1 1 } { 3 2 } { 1 3 }
-        { 3 4 } { 3 0 } f       { 1 0 } { 2 1 }
-        { 3 1 } { 0 3 } { 4 1 } { 0 1 } { 2 2 }
-        { 4 3 } { 2 3 } { 0 2 } { 3 3 } { 4 4 }
-        { 4 2 } { 2 0 } { 0 0 } { 1 2 } { 1 4 }
-        f       f       f       f       f       } } }
-[ make-move-fixture dup make-move play-boards>> ] unit-test
+! !!!!!!!! make-game-move
+{ { 4 9 5 11 17 } } [ make-move-fixture dup make-game-move moves-left>> ] unit-test
+{ 7 } [ make-move-fixture dup make-game-move last-move>> ] unit-test
+{ { { 0 4 } { 4 0 } { 1 1 } { 3 2 } { 1 3 }
+    { 3 4 } { 3 0 } f       { 1 0 } { 2 1 }
+    { 3 1 } { 0 3 } { 4 1 } { 0 1 } { 2 2 }
+    { 4 3 } { 2 3 } { 0 2 } { 3 3 } { 4 4 }
+    { 4 2 } { 2 0 } { 0 0 } { 1 2 } { 1 4 }
+    f       f       f       f       f       } }
+[ make-move-fixture dup make-game-move boards>> first play>> ] unit-test
 { { { 0 0 1 0 0 } { 0 0 0 0 1 } } }
-[ make-move-fixture dup make-move hits>> ] unit-test
+[ make-move-fixture dup make-game-move boards>> first hits>> ] unit-test
 
 ! !!!!!! play-to-win
 { 24 }
