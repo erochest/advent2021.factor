@@ -95,17 +95,41 @@ IN: advent2021.day04.tests
 { { { 0 0 1 0 0 } { 0 0 0 0 1 } } }
 [ make-move-fixture dup make-game-move boards>> first hits>> ] unit-test
 
+! !!!!!!! make-game-move, move not found
+: move-not-found-fixture ( -- bingo-game )
+    make-move-fixture { 25 29 } >>moves-left ;
+{ { 29 } } [ move-not-found-fixture dup make-game-move moves-left>> ] unit-test
+{ 25 } [ move-not-found-fixture dup make-game-move last-move>> ] unit-test
+{ { { 0 4 } { 4 0 } { 1 1 } { 3 2 } { 1 3 }
+    { 3 4 } { 3 0 } { 2 4 } { 1 0 } { 2 1 }
+    { 3 1 } { 0 3 } { 4 1 } { 0 1 } { 2 2 }
+    { 4 3 } { 2 3 } { 0 2 } { 3 3 } { 4 4 }
+    { 4 2 } { 2 0 } { 0 0 } { 1 2 } { 1 4 }
+    f       f       f       f       f       } }
+[ move-not-found-fixture dup make-game-move boards>> first play>> ] unit-test
+{ { { 0 0 0 0 0 } { 0 0 0 0 0 } } }
+[ move-not-found-fixture dup make-game-move boards>> first hits>> ] unit-test
+
+
 ! !!!!!! play-to-win
 { 24 }
 [ "vocab:advent2021/day04/example.txt" read04a play-to-win last-move>> ] unit-test
 
-! !!!!!! get-winning-board
-
-! !!!!!! get-last-called
-
 ! !!!!!! score-board
+: score-board-fixture ( -- board )
+    f
+    { f       f       { 1 1 } f       { 1 3 }
+      { 3 4 } { 3 0 } f       f       { 2 1 }
+      f       f       f       { 0 1 } f      
+      { 4 3 } f       f       { 3 3 } f      
+      f       f       f       f       f      
+      f       f       f       f       f       }
+    f bingo-board boa ;
+
+{ 1728 } [ 24 score-board-fixture score-board ] unit-test
 
 ! !!!!!! get-unmarked-numbers
+{ { 2 4 5 6 9 13 15 18 } } [ score-board-fixture get-unmarked-numbers ] unit-test
 
 ! !!!! day04a
 { 4512 } [ "vocab:advent2021/day04/example.txt" day04a ] unit-test

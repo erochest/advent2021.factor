@@ -1,6 +1,6 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays io io.encodings.utf8 io.files kernel locals math math.parser
+USING: accessors assocs arrays io io.encodings.utf8 io.files kernel locals math math.parser
 prettyprint sequences sequences.generalizations splitting combinators.short-circuit ;
 IN: advent2021.day04
 
@@ -29,35 +29,33 @@ TUPLE: bingo-board board play hits ;
     bingo-board boa ;
 
 : winning? ( board -- ? )
-    hits>>
-    { [ first [ 5 = ] any? ] [ second [ 5 = ] any? ] }
-    1|| ;
+    hits>> { [ first [ 5 = ] any? ] [ second [ 5 = ] any? ] } 1|| ;
 
 : mark-square ( board move -- pair )
-    ! "mark-square" print .s nl
     [ play>> ] dip
     [ swap nth ] 2keep
     f swap rot set-nth
     ;
 : incr-col-hit ( hits col -- )
-    ! "incr-col-hit" print .s nl
-    [ first ] dip 
+    [ second ] dip 
     [ over nth ] keep
     [ 1 + ] dip
     rot set-nth ;
 : incr-row-hit ( hits col -- )
-    ! "incr-row-hit" print .s nl
-    [ second ] dip
+    [ first ] dip
     [ over nth ] keep
     [ 1 + ] dip
     rot set-nth ;
 : make-move ( board move -- )
-    ! "make-move" print .s nl
     dupd mark-square
-    [ hits>> ] dip
-    [ first ] [ second ] bi
-    overd incr-row-hit
-    incr-col-hit 
+    dup [
+        [ hits>> ] dip
+        [ first ] [ second ] bi
+        overd incr-col-hit
+        incr-row-hit
+    ] [
+        2drop
+    ] if 
     ;
 
 TUPLE: bingo-game boards moves-left last-move winning ;
@@ -76,43 +74,21 @@ TUPLE: bingo-game boards moves-left last-move winning ;
     <bingo-game> ;
 
 : update-moves ( game -- move )
-    ! "update-moves" print .s nl
-    dup moves-left>> unclip
-    [ >>moves-left ] dip
-    [ >>last-move ] keep
-    nip ;
-! :: mark-hits ( move game -- )
-!     ! "mark-hits" print .s nl
-!     game hits>> :> hits
-!     game play-boards>> [ move swap nth ] map :> pairs
-!     pairs length 1 -
-!     [ dup 0 >= ] [
-!         ! pair hits pair-0 ! index
-!         [ pairs nth ] keep
-!         [
-!             hits over first incr-col-hit
-!             hits swap second incr-row-hit
-!         ] dip
-!         ! "in while" print .s nl
-!         1 -
-!     ] while
-!     drop
-!     ;
-! : mark-number ( move game -- )
-!     ! "mark-number" print .s nl
-!     f -rot
-!     play-boards>> [
-!         [ set-nth ] 3keep drop
-!     ] each
-!     2drop ;
+    dup moves-left>>
+    dup empty? [ 2drop f ] [
+        unclip
+        [ >>moves-left ] dip
+        [ >>last-move ] keep
+        nip
+    ] if
+    ;
 :: make-game-move ( game -- )
-    ! "make-game-move" print .s nl
     game update-moves :> move
     game boards>> [ move make-move ] each
-    game boards>> [ winning? ] filter
-    dup [ length zero? ] [ drop f ] [ first ] if
+    game boards>>
+    [ winning? ] filter
+    dup length zero? [ drop f ] [ first ] if
     game winning<<
-    drop
     ;
 
 : play-to-win ( bingo-game -- bingo-game )
@@ -120,15 +96,15 @@ TUPLE: bingo-game boards moves-left last-move winning ;
         dup make-game-move
     ] while ;
 
-: get-winning-board ( bingo-game -- bingo-board ) ;
-: get-last-called ( bingo-game -- n ) ;
-: score-board ( bingo-board last-number -- score ) drop ;
-: get-unmarked-numbers ( bingo-board -- seq ) ;
+: get-unmarked-numbers ( bingo-board -- seq )
+    play>> <enumerated> [ second ] filter [ first ] map >array ;
+: score-board ( last-number bingo-board -- score )
+    get-unmarked-numbers sum * ;
 
 : day04a ( path -- checksum )
     read04a
     play-to-win
-       [ get-winning-board ]
-       [ get-last-called ] bi
+       [ last-move>> ]
+       [ winning>> ] bi
     score-board
     ;
