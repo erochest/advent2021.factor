@@ -61,7 +61,7 @@ TUPLE: bingo-board board play hits ;
 
 TUPLE: bingo-game boards moves-left last-move winning ;
 : <bingo-game> ( boards moves-left -- bingo-game )
-    [ [ <bingo-board> ] map ] dip f f bingo-game boa ;
+    [ [ <bingo-board> ] map ] dip f V{ } clone bingo-game boa ;
 
 : parse-moves ( string -- number-seq ) "," split [ string>number ] map ;
 : parse-board ( string-seq -- bingo-board )
@@ -83,19 +83,20 @@ TUPLE: bingo-game boards moves-left last-move winning ;
         nip
     ] if
     ;
+: update-winning ( game -- )
+    dup boards>> [ winning? ] partition
+    pick boards<<
+    [ winning>> ] dip append! drop ;
 :: make-game-move ( game -- )
     game update-moves :> move
     game boards>> [ move make-move ] each
-    game boards>>
-    [ winning? ] filter
-    dup length zero? [ drop f ] [ first ] if
-    game winning<<
+    game update-winning
     ;
 
-: play-to-win ( bingo-game -- bingo-game )
-    [ dup winning>> not ] [
+: play-to-win ( bingo-game -- )
+    [ dup winning>> empty? ] [
         dup make-game-move
-    ] while ;
+    ] while drop ;
 
 : get-unmarked-numbers ( bingo-board -- seq ) play>> keys ;
 : score-board ( last-number bingo-board -- score )
@@ -103,8 +104,25 @@ TUPLE: bingo-game boards moves-left last-move winning ;
 
 : day04a ( path -- checksum )
     read04a
-    play-to-win
+    dup play-to-win
        [ last-move>> ]
-       [ winning>> ] bi
+       [ winning>> first ] bi
+    score-board
+    ;
+
+! TODO: The problem I'm having is how to know which board won last.
+! Can I have something return that along with the winning number?
+! If I took boards out of play once they'd won and only hang onto the
+! last winner, would that help?
+
+: play-to-lose ( bingo-game -- )
+    [ dup boards>> empty? not ] [
+        dup make-game-move
+    ] while drop ;
+: day04b ( path -- checksum )
+    read04a
+    dup play-to-lose
+        [ last-move>> ]
+        [ winning>> last ] bi
     score-board
     ;

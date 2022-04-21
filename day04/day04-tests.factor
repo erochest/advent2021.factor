@@ -110,14 +110,14 @@ IN: advent2021.day04.tests
 
 ! !!!!!! play-to-win
 { 24 }
-[ "vocab:advent2021/day04/example.txt" read04a play-to-win last-move>> ] unit-test
+[ "vocab:advent2021/day04/example.txt" read04a dup play-to-win last-move>> ] unit-test
 
 ! !!!!!! score-board
 : score-board-fixture ( -- board )
     f
     H{ {  2 { 1 1 } } {  4 { 1 3 } } {  5 { 3 4 } } {  6 { 3 0 } }
        {  9 { 2 1 } } { 13 { 0 1 } } { 15 { 4 3 } } { 18 { 3 3 } } }
-    f bingo-board boa ;
+    V{ } clone bingo-board boa ;
 
 { 1728 } [ 24 score-board-fixture score-board ] unit-test
 
@@ -127,3 +127,11 @@ IN: advent2021.day04.tests
 ! !!!! day04a
 { 4512 } [ "vocab:advent2021/day04/example.txt" day04a ] unit-test
 { 49686 } [ "vocab:advent2021/day04/data.txt" day04a ] unit-test
+
+! !!!!!! play-to-lose
+{ 13 }
+[ "vocab:advent2021/day04/example.txt" read04a dup play-to-lose last-move>> ] unit-test
+
+! !!!! day04b
+{ 1924 } [ "vocab:advent2021/day04/example.txt" day04b ] unit-test
+{ 26878 } [ "vocab:advent2021/day04/data.txt" day04b ] unit-test
