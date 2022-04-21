@@ -1,7 +1,8 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors assocs arrays io io.encodings.utf8 io.files kernel locals math math.parser
-prettyprint sequences sequences.generalizations splitting combinators.short-circuit ;
+USING: accessors assocs arrays io io.encodings.utf8 io.files kernel hashtables
+locals math math.parser prettyprint sequences sequences.generalizations 
+splitting combinators.short-circuit ;
 IN: advent2021.day04
 
 :: inc-nth ( n seq -- ) n seq nth 1 + n seq set-nth ;
@@ -9,17 +10,17 @@ IN: advent2021.day04
 : cursor-next-col ( pair -- ) 1 swap inc-nth ;
 
 ! a play-board-seq indexes each item with an array of completion zones.
-:: board>play-board ( board-seq -- play-board-seq )
-    30 f <array> :> play-board-seq
+:: board>play-board ( board-seq -- play-board-hash-table )
+    25 <hashtable> :> play-board-dict
     -1 -1 2array board-seq [
         [ dup cursor-next-row ] dip
         [
             [ dup cursor-next-col dup clone ] dip
-            play-board-seq set-nth
+            play-board-dict set-at
         ] each
     ] each
     drop
-    play-board-seq
+    play-board-dict
     ;
 
 TUPLE: bingo-board board play hits ;
@@ -33,8 +34,8 @@ TUPLE: bingo-board board play hits ;
 
 : mark-square ( board move -- pair )
     [ play>> ] dip
-    [ swap nth ] 2keep
-    f swap rot set-nth
+    [ swap at ] 2keep
+    swap delete-at
     ;
 : incr-col-hit ( hits col -- )
     [ second ] dip 
@@ -96,8 +97,7 @@ TUPLE: bingo-game boards moves-left last-move winning ;
         dup make-game-move
     ] while ;
 
-: get-unmarked-numbers ( bingo-board -- seq )
-    play>> <enumerated> [ second ] filter [ first ] map >array ;
+: get-unmarked-numbers ( bingo-board -- seq ) play>> keys ;
 : score-board ( last-number bingo-board -- score )
     get-unmarked-numbers sum * ;
 

@@ -1,6 +1,7 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays tools.test advent2021.day04 kernel sequences ;
+USING: accessors arrays tools.test advent2021.day04 kernel
+math.order sequences sorting ;
 IN: advent2021.day04.tests
 
 ! !!!!!!!!!! inc-nth
@@ -8,12 +9,11 @@ IN: advent2021.day04.tests
 { { 1 0 } } [ 0 0 2array 0 over inc-nth ] unit-test
 
 ! !!!!!!!! board>play-board
-{ { { 0 4 } { 4 0 } { 1 1 } { 3 2 } { 1 3 }
-    { 3 4 } { 3 0 } { 2 4 } { 1 0 } { 2 1 }
-    { 3 1 } { 0 3 } { 4 1 } { 0 1 } { 2 2 }
-    { 4 3 } { 2 3 } { 0 2 } { 3 3 } { 4 4 }
-    { 4 2 } { 2 0 } { 0 0 } { 1 2 } { 1 4 }
-    f       f       f       f       f       } }
+{ H{ {  0 { 0 4 } } {  1 { 4 0 } } {  2 { 1 1 } } {  3 { 3 2 } } {  4 { 1 3 } }
+     {  5 { 3 4 } } {  6 { 3 0 } } {  7 { 2 4 } } {  8 { 1 0 } } {  9 { 2 1 } }
+     { 10 { 3 1 } } { 11 { 0 3 } } { 12 { 4 1 } } { 13 { 0 1 } } { 14 { 2 2 } }
+     { 15 { 4 3 } } { 16 { 2 3 } } { 17 { 0 2 } } { 18 { 3 3 } } { 19 { 4 4 } }
+     { 20 { 4 2 } } { 21 { 2 0 } } { 22 { 0 0 } } { 23 { 1 2 } } { 24 { 1 4 } } } }
 [ { { 22 13 17 11  0 }
     {  8  2 23  4 24 }
     { 21  9 14 16  7 }
@@ -61,12 +61,11 @@ IN: advent2021.day04.tests
     {  2  0 12  3  7 } } }
 [ "vocab:advent2021/day04/example.txt" read04a boards>> third board>> ] unit-test
 
-{ { { 0 4 } { 4 0 } { 1 1 } { 3 2 } { 1 3 }
-    { 3 4 } { 3 0 } { 2 4 } { 1 0 } { 2 1 }
-    { 3 1 } { 0 3 } { 4 1 } { 0 1 } { 2 2 }
-    { 4 3 } { 2 3 } { 0 2 } { 3 3 } { 4 4 }
-    { 4 2 } { 2 0 } { 0 0 } { 1 2 } { 1 4 }
-    f       f       f       f       f       } }
+{ H{ {  0 { 0 4 } } {  1 { 4 0 } } {  2 { 1 1 } } {  3 { 3 2 } } {  4 { 1 3 } }
+     {  5 { 3 4 } } {  6 { 3 0 } } {  7 { 2 4 } } {  8 { 1 0 } } {  9 { 2 1 } }
+     { 10 { 3 1 } } { 11 { 0 3 } } { 12 { 4 1 } } { 13 { 0 1 } } { 14 { 2 2 } }
+     { 15 { 4 3 } } { 16 { 2 3 } } { 17 { 0 2 } } { 18 { 3 3 } } { 19 { 4 4 } }
+     { 20 { 4 2 } } { 21 { 2 0 } } { 22 { 0 0 } } { 23 { 1 2 } } { 24 { 1 4 } } } }
 [ "vocab:advent2021/day04/example.txt" read04a boards>> first play>> ] unit-test
 
 { f } [ f f { { 0 0 0 0 0 } { 0 0 0 0 0 } } bingo-board boa winning? ] unit-test
@@ -85,12 +84,11 @@ IN: advent2021.day04.tests
 ! !!!!!!!! make-game-move
 { { 4 9 5 11 17 } } [ make-move-fixture dup make-game-move moves-left>> ] unit-test
 { 7 } [ make-move-fixture dup make-game-move last-move>> ] unit-test
-{ { { 0 4 } { 4 0 } { 1 1 } { 3 2 } { 1 3 }
-    { 3 4 } { 3 0 } f       { 1 0 } { 2 1 }
-    { 3 1 } { 0 3 } { 4 1 } { 0 1 } { 2 2 }
-    { 4 3 } { 2 3 } { 0 2 } { 3 3 } { 4 4 }
-    { 4 2 } { 2 0 } { 0 0 } { 1 2 } { 1 4 }
-    f       f       f       f       f       } }
+{ H{ {  0 { 0 4 } } {  1 { 4 0 } } {  2 { 1 1 } } {  3 { 3 2 } } {  4 { 1 3 } }
+     {  5 { 3 4 } } {  6 { 3 0 } }                {  8 { 1 0 } } {  9 { 2 1 } }
+     { 10 { 3 1 } } { 11 { 0 3 } } { 12 { 4 1 } } { 13 { 0 1 } } { 14 { 2 2 } }
+     { 15 { 4 3 } } { 16 { 2 3 } } { 17 { 0 2 } } { 18 { 3 3 } } { 19 { 4 4 } }
+     { 20 { 4 2 } } { 21 { 2 0 } } { 22 { 0 0 } } { 23 { 1 2 } } { 24 { 1 4 } } } }
 [ make-move-fixture dup make-game-move boards>> first play>> ] unit-test
 { { { 0 0 1 0 0 } { 0 0 0 0 1 } } }
 [ make-move-fixture dup make-game-move boards>> first hits>> ] unit-test
@@ -100,12 +98,11 @@ IN: advent2021.day04.tests
     make-move-fixture { 25 29 } >>moves-left ;
 { { 29 } } [ move-not-found-fixture dup make-game-move moves-left>> ] unit-test
 { 25 } [ move-not-found-fixture dup make-game-move last-move>> ] unit-test
-{ { { 0 4 } { 4 0 } { 1 1 } { 3 2 } { 1 3 }
-    { 3 4 } { 3 0 } { 2 4 } { 1 0 } { 2 1 }
-    { 3 1 } { 0 3 } { 4 1 } { 0 1 } { 2 2 }
-    { 4 3 } { 2 3 } { 0 2 } { 3 3 } { 4 4 }
-    { 4 2 } { 2 0 } { 0 0 } { 1 2 } { 1 4 }
-    f       f       f       f       f       } }
+{ H{ {  0 { 0 4 } } {  1 { 4 0 } } {  2 { 1 1 } } {  3 { 3 2 } } {  4 { 1 3 } }
+     {  5 { 3 4 } } {  6 { 3 0 } } {  7 { 2 4 } } {  8 { 1 0 } } {  9 { 2 1 } }
+     { 10 { 3 1 } } { 11 { 0 3 } } { 12 { 4 1 } } { 13 { 0 1 } } { 14 { 2 2 } }
+     { 15 { 4 3 } } { 16 { 2 3 } } { 17 { 0 2 } } { 18 { 3 3 } } { 19 { 4 4 } }
+     { 20 { 4 2 } } { 21 { 2 0 } } { 22 { 0 0 } } { 23 { 1 2 } } { 24 { 1 4 } } } }
 [ move-not-found-fixture dup make-game-move boards>> first play>> ] unit-test
 { { { 0 0 0 0 0 } { 0 0 0 0 0 } } }
 [ move-not-found-fixture dup make-game-move boards>> first hits>> ] unit-test
@@ -118,18 +115,14 @@ IN: advent2021.day04.tests
 ! !!!!!! score-board
 : score-board-fixture ( -- board )
     f
-    { f       f       { 1 1 } f       { 1 3 }
-      { 3 4 } { 3 0 } f       f       { 2 1 }
-      f       f       f       { 0 1 } f      
-      { 4 3 } f       f       { 3 3 } f      
-      f       f       f       f       f      
-      f       f       f       f       f       }
+    H{ {  2 { 1 1 } } {  4 { 1 3 } } {  5 { 3 4 } } {  6 { 3 0 } }
+       {  9 { 2 1 } } { 13 { 0 1 } } { 15 { 4 3 } } { 18 { 3 3 } } }
     f bingo-board boa ;
 
 { 1728 } [ 24 score-board-fixture score-board ] unit-test
 
 ! !!!!!! get-unmarked-numbers
-{ { 2 4 5 6 9 13 15 18 } } [ score-board-fixture get-unmarked-numbers ] unit-test
+{ { 2 4 5 6 9 13 15 18 } } [ score-board-fixture get-unmarked-numbers [ <=> ] sort ] unit-test
 
 ! !!!! day04a
 { 4512 } [ "vocab:advent2021/day04/example.txt" day04a ] unit-test
