@@ -110,11 +110,6 @@ TUPLE: bingo-game boards moves-left last-move winning ;
     score-board
     ;
 
-! TODO: The problem I'm having is how to know which board won last.
-! Can I have something return that along with the winning number?
-! If I took boards out of play once they'd won and only hang onto the
-! last winner, would that help?
-
 : play-to-lose ( bingo-game -- )
     [ dup boards>> empty? not ] [
         dup make-game-move
