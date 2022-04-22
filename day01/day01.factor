@@ -7,8 +7,7 @@ IN: advent2021.day01
 : read01 ( path -- seq )   utf8 file-lines [ string>number ] map ;
 : >pairs ( seq -- seq' ) 2 clump ;
 : ascending? ( pair -- ? ) [ first ] [ second ] bi < ;
-: only-t ( seq -- seq ) [ ] filter ;
-: count-t ( seq -- n ) only-t length ;
+: count-t ( seq -- n ) sift length ;
 : day01a ( path -- increasing-count )
     read01 >pairs [ ascending? ] map count-t ;
 
