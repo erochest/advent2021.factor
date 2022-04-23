@@ -1,7 +1,7 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: arrays io.encodings.utf8 io.files kernel math.parser
-sequences splitting ;
+USING: arrays combinators io.encodings.utf8 io.files kernel
+math.parser math.ranges sequences splitting ;
 IN: advent2021.day05
 
 : strip-nl ( line -- line ) 10 swap remove ;
@@ -15,3 +15,19 @@ IN: advent2021.day05
         parse-line-segment
     ] map ;
 
+: split-segment ( segment -- from to ) [ first ] [ second ] bi ;
+: xs ( from to -- x1 x2 ) [ first ] [ first ] bi* ;
+: ys ( from to -- y1 y2 ) [ second ] [ second ] bi* ;
+: xs-same? ( from to -- ? ) xs = ;
+: ys-same? ( from to -- ? ) ys = ;
+: on-straight? ( segment -- ? ) 
+    split-segment [ xs-same? ] 2keep ys-same? or ;
+: expand-straight-lines ( segment -- seq )
+    split-segment {
+        { [ 2dup xs-same? ]
+          [ 2dup ys [a,b] -rot xs drop [ swap 2array ] curry map ] }
+        { [ 2dup ys-same? ]
+          [ 2dup xs [a,b] -rot ys drop [ 2array ] curry map ] }
+        [ 2drop { } clone ]
+    } cond
+    ;

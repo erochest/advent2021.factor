@@ -13,3 +13,14 @@ IN: advent2021.day05.tests
 unit-test
 
 { { 0 9 } } [ "0,9" parse-split-point ] unit-test
+
+{ t } [ { { 1 1 } { 1 3 } } on-straight? ] unit-test
+{ t } [ { { 9 7 } { 7 7 } } on-straight? ] unit-test
+{ f } [ { { 0 0 } { 8 8 } } on-straight? ] unit-test
+
+{ { { 1 1 } { 1 2 } { 1 3 } } }
+[ { { 1 1 } { 1 3 } } expand-straight-lines ] unit-test
+{ { { 9 7 } { 8 7 } { 7 7 } } }
+[ { { 9 7 } { 7 7 } } expand-straight-lines ] unit-test
+{ { } }
+[ { { 0 0 } { 8 8 } } expand-straight-lines ] unit-test
