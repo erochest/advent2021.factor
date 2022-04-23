@@ -20,14 +20,16 @@ IN: advent2021.day05
 : ys ( from to -- y1 y2 ) [ second ] [ second ] bi* ;
 : xs-same? ( from to -- ? ) xs = ;
 : ys-same? ( from to -- ? ) ys = ;
-: on-straight? ( segment -- ? ) 
+: expand-ys ( from to -- y-range x ) 2dup ys [a,b] -rot xs drop ;
+: expand-xs ( from to -- x-range y ) 2dup xs [a,b] -rot ys drop ;
+: pair-x ( y-range x -- seq ) [ swap 2array ] curry map ;
+: pair-y ( x-range y -- seq ) [ 2array ] curry map ;
+: on-straight? ( segment -- ? )
     split-segment [ xs-same? ] 2keep ys-same? or ;
 : expand-straight-lines ( segment -- seq )
     split-segment {
-        { [ 2dup xs-same? ]
-          [ 2dup ys [a,b] -rot xs drop [ swap 2array ] curry map ] }
-        { [ 2dup ys-same? ]
-          [ 2dup xs [a,b] -rot ys drop [ 2array ] curry map ] }
+        { [ 2dup xs-same? ] [ expand-ys pair-x ] }
+        { [ 2dup ys-same? ] [ expand-xs pair-y ] }
         [ 2drop { } clone ]
     } cond
     ;
