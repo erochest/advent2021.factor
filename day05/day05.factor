@@ -11,5 +11,7 @@ IN: advent2021.day05
 : parse-points ( x y -- x' y' ) [ parse-split-point ] bi@ ;
 : parse-line-segment ( line -- segment )
     strip-nl " " split pick-ends parse-points 2array ;
-: read05 ( path -- lines ) utf8 file-lines ;
+: read05 ( path -- lines ) utf8 file-lines [
+        parse-line-segment
+    ] map ;
 
