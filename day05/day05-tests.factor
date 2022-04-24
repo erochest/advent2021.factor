@@ -1,6 +1,6 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: tools.test advent2021.day05 ;
+USING: advent2021.day05 sequences tools.test ;
 IN: advent2021.day05.tests
 
 { { T{ segment f T{ point f 0 9 } T{ point f 5 9 } }
@@ -40,3 +40,14 @@ unit-test
 { { } }
 [ T{ segment f T{ point f 0 0 } T{ point f 8 8 } }
   expand-straight-lines ] unit-test
+
+{ 4 } [ 0  9 <point> 3 9 <point> <segment> length ] unit-test
+{ 4 } [ 3  9 <point> 0 9 <point> <segment> length ] unit-test
+{ 4 } [ 3  6 <point> 3 9 <point> <segment> length ] unit-test
+{ 5 } [ 3 10 <point> 3 6 <point> <segment> length ] unit-test
+{ 0 } [ 4 11 <point> 3 6 <point> <segment> length ] unit-test
+
+{ T{ point f 1  9 } } [ 1 0  9 <point> 3 9 <point> <segment> nth ] unit-test
+{ T{ point f 2  9 } } [ 2 0  9 <point> 3 9 <point> <segment> nth ] unit-test
+{ T{ point f 3 10 } } [ 0 3 10 <point> 3 6 <point> <segment> nth ] unit-test
+{ T{ point f 3  6 } } [ 4 3 10 <point> 3 6 <point> <segment> nth ] unit-test

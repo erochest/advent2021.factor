@@ -11,21 +11,10 @@ C: <point> point
 
 TUPLE: segment
     { from point read-only }
-    { to point read-only } ;
-C: <segment> segment
+    { to point read-only }
+    cache ;
+: <segment> ( from to -- segment ) f segment boa ;
 ! TODO: sequence protocol
-
-: strip-nl ( line -- line ) 10 swap remove ;
-: pick-ends ( seq -- first last ) [ first ] [ last ] bi ;
-: 2array>point ( 2array -- point ) pick-ends <point> ;
-: parse-split-point ( pair -- point )
-    "," split [ string>number ] map 2array>point ;
-: parse-points ( x y -- x' y' ) [ parse-split-point ] bi@ ;
-: parse-line-segment ( line -- segment )
-    strip-nl " " split pick-ends parse-points <segment> ;
-: read05 ( path -- lines ) utf8 file-lines [
-        parse-line-segment
-    ] map ;
 
 : split-segment ( segment -- from to ) [ from>> ] [ to>> ] bi ;
 : xs ( from to -- x1 x2 ) [ x>> ] [ x>> ] bi* ;
@@ -45,3 +34,34 @@ C: <segment> segment
         [ 2drop { } clone ]
     } cond
     ;
+
+: expanded>> ( segment -- array )
+    dup cache>> [
+        dup expand-straight-lines
+        [ >>cache ] keep
+    ] unless*
+    nip ;
+
+INSTANCE: segment sequence
+
+M: segment length ( segment -- n )
+    split-segment {
+        { [ 2dup xs-same? ] [ ys - abs 1 + ] }
+        { [ 2dup ys-same? ] [ xs - abs 1 + ] }
+        [ 2drop 0 ]
+    } cond ;
+
+M: segment nth ( n segment -- elt ) expanded>> nth ;
+
+: strip-nl ( line -- line ) 10 swap remove ;
+: pick-ends ( seq -- first last ) [ first ] [ last ] bi ;
+: 2array>point ( 2array -- point ) pick-ends <point> ;
+: parse-split-point ( pair -- point )
+    "," split [ string>number ] map 2array>point ;
+: parse-points ( x y -- x' y' ) [ parse-split-point ] bi@ ;
+: parse-line-segment ( line -- segment )
+    strip-nl " " split pick-ends parse-points <segment> ;
+: read05 ( path -- lines ) utf8 file-lines [
+        parse-line-segment
+    ] map ;
+
