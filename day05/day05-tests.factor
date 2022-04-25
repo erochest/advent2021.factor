@@ -51,3 +51,11 @@ unit-test
 { T{ point f 2  9 } } [ 2 0  9 <point> 3 9 <point> <segment> nth ] unit-test
 { T{ point f 3 10 } } [ 0 3 10 <point> 3 6 <point> <segment> nth ] unit-test
 { T{ point f 3  6 } } [ 4 3 10 <point> 3 6 <point> <segment> nth ] unit-test
+
+[ 4 11 <point> 1 0 9 <point> 3 9 <point> <segment> set-nth ] must-fail
+
+{ { T{ point f 1 1 } T{ point f 1 2 } T{ point f 1 3 } } }
+[ 1 1 <point> 1 3 <point> <segment> expanded>> ] unit-test
+
+{ { T{ point f 9 7 } T{ point f 8 7 } T{ point f 7 7 } } }
+[ 9 7 <point> 7 7 <point> <segment> expanded>> ] unit-test

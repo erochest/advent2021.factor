@@ -14,7 +14,6 @@ TUPLE: segment
     { to point read-only }
     cache ;
 : <segment> ( from to -- segment ) f segment boa ;
-! TODO: sequence protocol
 
 : split-segment ( segment -- from to ) [ from>> ] [ to>> ] bi ;
 : xs ( from to -- x1 x2 ) [ x>> ] [ x>> ] bi* ;
@@ -34,7 +33,6 @@ TUPLE: segment
         [ 2drop { } clone ]
     } cond
     ;
-
 : expanded>> ( segment -- array )
     dup cache>> [
         dup expand-straight-lines
@@ -43,15 +41,14 @@ TUPLE: segment
     nip ;
 
 INSTANCE: segment sequence
-
 M: segment length ( segment -- n )
     split-segment {
         { [ 2dup xs-same? ] [ ys - abs 1 + ] }
         { [ 2dup ys-same? ] [ xs - abs 1 + ] }
         [ 2drop 0 ]
     } cond ;
-
 M: segment nth ( n segment -- elt ) expanded>> nth ;
+M: segment set-nth ( elt n segment -- ) immutable ;
 
 : strip-nl ( line -- line ) 10 swap remove ;
 : pick-ends ( seq -- first last ) [ first ] [ last ] bi ;
