@@ -1,7 +1,8 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays combinators io.encodings.utf8 io.files
-kernel math math.parser math.ranges sequences splitting ;
+USING: accessors arrays assocs combinators hashtables
+io.encodings.utf8 io.files kernel math math.parser math.ranges
+sequences splitting ;
 IN: advent2021.day05
 
 TUPLE: point
@@ -62,3 +63,15 @@ M: segment set-nth ( elt n segment -- ) immutable ;
         parse-line-segment
     ] map ;
 
+: frequencies ( seq hash-table -- )
+    swap [ over inc-at ] each drop ;
+: segment-frequencies ( segment-seq -- hash-table )
+    H{ } clone swap [ over frequencies ] each ;
+: maximum-overlap ( hash-table -- integer ) values supremum ;
+: count-overlaps ( hash-table overlap -- integer )
+    [ >alist ] dip [ swap second = ] curry filter length ;
+: day05a ( path -- checksum )
+    read05
+    segment-frequencies
+    dup maximum-overlap
+    count-overlaps ;

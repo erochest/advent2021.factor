@@ -1,6 +1,6 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: advent2021.day05 sequences tools.test ;
+USING: advent2021.day05 kernel sequences tools.test ;
 IN: advent2021.day05.tests
 
 { { T{ segment f T{ point f 0 9 } T{ point f 5 9 } }
@@ -59,3 +59,24 @@ unit-test
 
 { { T{ point f 9 7 } T{ point f 8 7 } T{ point f 7 7 } } }
 [ 9 7 <point> 7 7 <point> <segment> expanded>> ] unit-test
+
+{ H{ { 1 4 } { 2 2 } { 3 7 } } }
+[ H{ } clone { 3 1 3 2 1 3 3 1 2 3 1 3 3 } over frequencies ] unit-test
+
+{ 2 }
+[
+    "vocab:advent2021/day05/example.txt" read05
+    segment-frequencies
+    maximum-overlap
+]
+unit-test
+{ 5 }
+[
+    "vocab:advent2021/day05/example.txt" read05
+    segment-frequencies
+    dup maximum-overlap 
+    count-overlaps
+] unit-test
+
+{ 5 } [ "vocab:advent2021/day05/example.txt" day05a ] unit-test
+! { 6841 } [ "vocab:advent2021/day05/data.txt" day05a ] unit-test
