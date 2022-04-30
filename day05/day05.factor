@@ -89,8 +89,7 @@ M: segment set-nth ( elt n segment -- ) immutable ;
     " -> " write
     [ to>> .point ] keep
     " " write
-    expanded>> pprint
-    nl ;
+    expanded>> . ;
 
 : frequencies ( seq hash-table -- )
     swap [ over inc-at ] each drop ;
