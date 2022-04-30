@@ -21,16 +21,6 @@ unit-test
 
 { T{ point f 0 9 } } [ "0,9" parse-split-point ] unit-test
 
-{ t }
-[ T{ segment f T{ point f 1 1 } T{ point f 1 3 } } on-straight? ]
-unit-test
-{ t }
-[ T{ segment f T{ point f 9 7 } T{ point f 7 7 } } on-straight? ]
-unit-test
-{ f }
-[ T{ segment f T{ point f 0 0 } T{ point f 8 8 } } on-straight? ]
-unit-test
-
 { { T{ point f 1 1 } T{ point f 1 2 } T{ point f 1 3 } } }
 [ T{ segment f T{ point f 1 1 } T{ point f 1 3 } }
   expand-straight-lines ] unit-test
@@ -63,20 +53,25 @@ unit-test
 { H{ { 1 4 } { 2 2 } { 3 7 } } }
 [ H{ } clone { 3 1 3 2 1 3 3 1 2 3 1 3 3 } over frequencies ] unit-test
 
-{ 2 }
-[
-    "vocab:advent2021/day05/example.txt" read05
-    segment-frequencies
-    maximum-overlap
-]
-unit-test
-{ 5 }
-[
-    "vocab:advent2021/day05/example.txt" read05
-    segment-frequencies
-    dup maximum-overlap 
-    count-overlaps
-] unit-test
-
 { 5 } [ "vocab:advent2021/day05/example.txt" day05a ] unit-test
-! { 6841 } [ "vocab:advent2021/day05/data.txt" day05a ] unit-test
+{ 6841 } [ "vocab:advent2021/day05/data.txt" day05a ] unit-test
+
+{ T{ segment f T{ point f 848 963 } T{ point f 908 963 } } }
+[ "848,963 -> 908,963\n" parse-line-segment ]
+unit-test
+
+{ { } } [ 1 1 <point> 3 3 <point> <segment> expanded>> ] unit-test
+{ { T{ point f 1 1 } T{ point f 2 2 } T{ point f 3 3 } } }
+[ [
+    1 1 <point> 3 3 <point> <segment> expanded>>
+] with-diagonals ] unit-test
+
+{ { } } [ 9 7 <point> 7 9 <point> <segment> expanded>> ] unit-test
+{ { T{ point f 9 7 } T{ point f 8 8 } T{ point f 7 9 } } }
+[ [
+    9 7 <point> 7 9 <point> <segment> expanded>>
+] with-diagonals ] unit-test
+
+{ 12 } [ "vocab:advent2021/day05/example.txt" day05b ] unit-test
+{ 19258 } [ "vocab:advent2021/day05/data.txt" day05b ] unit-test
+
