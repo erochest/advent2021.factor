@@ -1,7 +1,8 @@
 ! Copyright (C) 2022 Your name.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: accessors arrays assocs io.encodings.utf8 io.files kernel
-math math.parser namespaces sequences splitting ;
+USING: accessors advent2021.io arrays assocs io.encodings.utf8
+io.files kernel math math.parser namespaces sequences 
+splitting ;
 IN: advent2021.day02
 
 TUPLE: position distance depth ;
@@ -19,7 +20,7 @@ H{ { "forward" [ forward ] } { "down" [ down ] } { "up" [ up ] } } +direction-co
     " " split [ second string>number ] [ first parse-direction ] bi curry ;
 : exec-commands ( position command-seq -- position ) [ call( pos -- pos ) ] each ;
 : dump-position ( position -- dist depth ) [ distance>> ] [ depth>> ] bi ;
-: read02a ( path -- seq ) utf8 file-lines [ parse-sub-command ] map ;
+: read02a ( path -- seq ) (file-lines) [ parse-sub-command ] map ;
 
 : day02a ( path -- n ) read02a <position> swap exec-commands dump-position * ;
 
@@ -38,7 +39,7 @@ SYMBOL: +sub-commands+
 H{ { "forward" [ forward-sub ] } { "down" [ down-sub ] } { "up" [ up-sub ] } } +sub-commands+ set-global
 : parse-sub ( str -- callable ) +sub-commands+ get-global at ;
 : parse-line ( str -- callable ) " " split [ second string>number ] [ first parse-sub ] bi curry ;
-: read02b ( path -- n ) utf8 file-lines [ parse-line ] map ;
+: read02b ( path -- n ) (file-lines) [ parse-line ] map ;
 : exec-sub ( sub seq -- sub ) [ call( sub -- sub ) ] each ;
 
 : day02b ( path -- n ) read02b <submarine> swap exec-sub [ distance>> ] [ depth>> ] bi * ;

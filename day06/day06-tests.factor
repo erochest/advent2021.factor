@@ -17,9 +17,6 @@ unit-test
 { 5934 } [ V{ 3 4 3 1 2 } >school 80 school-term checksum ]
 unit-test
 
-{ { 3 4 3 1 2 } }
-[ "vocab:advent2021/day06/example.txt" read-numbers ] unit-test
-
 { 5934 } [ "vocab:advent2021/day06/example.txt" day06a ]
 unit-test
 { 389726 } [ "vocab:advent2021/day06/data.txt" day06a ]

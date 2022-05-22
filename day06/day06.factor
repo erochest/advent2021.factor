@@ -1,9 +1,9 @@
 ! Copyright (C) 2022 Eric Rochester.
 ! See http://factorcode.org/license.txt for BSD license.
 
-USING: arrays assocs hashtables io.encodings.utf8 io.files
-kernel math math.parser math.ranges prettyprint sequences
-splitting vectors ;
+USING: advent2021.io arrays assocs hashtables io.encodings.utf8
+io.files kernel math math.parser math.ranges prettyprint
+sequences splitting vectors ;
 IN: advent2021.day06
 
 : inc ( n seq -- ) [ nth 1 + ] 2keep set-nth ;
@@ -20,13 +20,7 @@ IN: advent2021.day06
 : school-term ( start-school days -- school )
     [1,b] [ drop school-day ] each ;
 : checksum ( school -- n ) sum ;
-: read-file-contents ( path -- seq ) utf8 file-contents ;
-: split-fields ( seq -- seq )
-    ",\n\r" split [ empty? not ] filter ;
-: seq>numbers ( seq -- seq ) [ string>number ] map ;
-: read-numbers ( path -- seq )
-    read-file-contents split-fields seq>numbers ;
 : run-for ( period path -- n )
-    read-numbers >school swap school-term checksum ;
+    read>numbers >school swap school-term checksum ;
 : day06a ( path -- n ) 80 swap run-for ;
 : day06b ( path -- n ) 256 swap run-for ;
