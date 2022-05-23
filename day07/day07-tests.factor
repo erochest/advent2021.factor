@@ -3,19 +3,6 @@
 USING: tools.test advent2021.day07 ;
 IN: advent2021.day07.tests
 
-{ { 15 0 1 1 3 1 6 0 1 13 } }
-[ { 16 1 2 0 4 2 7 1 2 14 } 1 distances-from ]
-unit-test
-
-{ 41 } [ { 16 1 2 0 4 2 7 1 2 14 }  1 fuel-from ] unit-test
-{ 37 } [ { 16 1 2 0 4 2 7 1 2 14 }  2 fuel-from ] unit-test
-{ 39 } [ { 16 1 2 0 4 2 7 1 2 14 }  3 fuel-from ] unit-test
-{ 71 } [ { 16 1 2 0 4 2 7 1 2 14 } 10 fuel-from ] unit-test
-
-{ { 10 9 8 7 10 } } [ { 4 1 1 4 5 } all-distances ] unit-test
-
-{ 37 } [ { 16 1 2 0 4 2 7 1 2 14 } least-fuel ] unit-test
-
 { 37 }
 [ "vocab:advent2021/day07/example.txt" day07a ]
 unit-test
