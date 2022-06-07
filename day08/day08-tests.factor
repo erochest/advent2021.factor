@@ -3,13 +3,6 @@
 USING: advent2021.day08 sequences tools.test ;
 IN: advent2021.day08.tests
 
-! a  1
-! b  2
-! c  4
-! d  8
-! e 16
-! f 32
-! g 64
 { T{
     signal-output
     f
@@ -36,3 +29,26 @@ IN: advent2021.day08.tests
     [ parse-pattern ] map
 ] unit-test
 
+{ 7 } [ 127 count-bits ] unit-test
+{ 2 } [  36 count-bits ] unit-test
+
+{ 10 }
+[ "vocab:advent2021/day08/example.txt" read-patterns length ]
+unit-test
+{ T{
+    signal-output
+    f
+    {
+        0b0010010 0b1111111 0b1111110 0b1111101 0b1010110
+        0b1111100 0b1111011 0b0111110 0b0101111 0b0011010
+    }
+    { 0b1111111 0b0111110 0b1111110 0b1010110 }
+} }
+[ "vocab:advent2021/day08/example.txt" read-patterns first ]
+unit-test
+
+{ 2 }
+[ { 0b1111111 0b0111110 0b1111110 0b1010110 } count-unique-patterns ]
+unit-test
+{ 26 } [ "vocab:advent2021/day08/example.txt" day08a ] unit-test
+{ 512 } [ "vocab:advent2021/day08/data.txt" day08a ] unit-test
