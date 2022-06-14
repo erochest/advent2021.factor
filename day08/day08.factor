@@ -2,8 +2,9 @@
 ! See http://factorcode.org/license.txt for BSD license.
 USING: accessors arrays assocs advent2021.io bit-arrays
 fry hashtables kernel locals math math.bits math.bitwise
-math.functions math.parser namespaces sequences sorting
-splitting vectors ;
+math.combinatorics math.functions math.parser math.ranges
+namespaces sequences sequences.extras sorting splitting
+vectors ;
 IN: advent2021.day08
 
 TUPLE: signal-output input-patterns output-values ;
@@ -61,73 +62,45 @@ signal-pattern-index set-global
     [ output-values>> count-unique-patterns ] map
     sum ;
 
-: zero? ( n -- ? ) bit-count 6 = ;
-: one? ( n -- ? ) bit-count 2 = ;
-: two? ( n -- ? ) bit-count 5 = ;
-: three? ( n -- ? ) bit-count 5 = ;
-: four? ( n -- ? ) bit-count 4 = ;
-: five? ( n -- ? ) bit-count 5 = ;
-: six? ( n -- ? ) bit-count 6 = ;
-: seven? ( n -- ? ) bit-count 3 = ;
-: eight? ( n -- ? ) bit-count 7 = ;
-: nine? ( n -- ? ) bit-count 6 = ;
-
-: mask-one ( inputs scratch -- scratch )
-    <enumerated> [
-        [ second over ] keep
-        first 1 = [
-            [ mask ] curry map
-        ] [
-            [ unmask ] curry map
-        ] if
-    ] map
+: bits ( pattern -- seq )
+    integer>bit-array <enumerated>
+    [ second ] [ first ] filter-map ;
+: >pattern ( connections n -- pattern )
+    signal-patterns get-global nth bits
+    [ over nth ] map
+    parse-pattern
     nip ;
-: mask-seven ( inputs scratch -- scratch )
-    <enumerated> [
-        [ second over ] keep
-        first 7 = [
-            [ mask ] curry map
-        ] [
-            [ unmask ] curry map
-        ] if
-    ] map
-    nip ;
+: all-patterns ( connections -- seq )
+    9 [0,b] [ dupd >pattern ] map nip ;
 
-SYMBOL: pattern-order
-{ 1 7 4 2 3 5 0 6 9 8 } pattern-order set-global
+: connections-match-input? ( input-seq connections -- ? )
+    all-patterns [ natural-sort ] bi@ = ;
 
-: patterns-for-bit-count ( count -- seq )
-    signal-pattern-index get-global at ;
-: signal-patterns-indexed ( -- seq )
-    signal-patterns get-global <enumerated> ;
-: find-bit-count-match ( n -- seq )
-    signal-patterns-indexed swap
-    bit-count patterns-for-bit-count
-    '[ second _ member? ] filter
-    [ first ] map ;
+: identify-pattern ( pattern connections -- n/f )
+    all-patterns swap [ = ] curry find drop ;
 
-: build-scratchpad ( -- seq )
-    10 0 <array>
-    [ drop 7 0b1111111 <array> ] map ;
-: set-segments ( elt ns scratchpad -- ) drop 2drop ;
+: identify-patterns ( connections pattern-seq -- seq )
+    swap [ identify-pattern ] curry map ;
+
+: join>number ( seq -- n )
+    0 swap <reversed> [
+        10 swap ^ * +
+    ] each-index ;
 
 : solve-output ( pattern -- n )
-    dup input-patterns>>
-    [ bit-count ] sort-with
-    [
-        drop
-        ! integer>bit-array <enumerated> [ second ] filter [ first ] map
-        ! dup length signal-pattern-index get-global at
-        ! dup length = 1 [
-            ! pick swap first
-            ! integer>bit-array <enumerated> [ second ] filter [ first ] map
+    "abcdefg" <permutations> [
+        [ dup input-patterns>> ] dip
+        connections-match-input?
+    ] find
+    nip
+    swap output-values>> identify-patterns
+    join>number ;
 
-        ! ] [
-
-        ! ] if
-    ] each
-    ;
-
+! May be able to hoist generating the permutations and
+! calling `all-patterns` on them at this level and then
+! passing those pre-computed values down into both
+! `connections-match-input?` and `identify-pattern`,
+! which both need those values.
 : day08b ( path -- n )
     read-patterns
     [ solve-output ] map

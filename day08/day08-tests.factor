@@ -50,54 +50,47 @@ unit-test
 { 26 } [ "vocab:advent2021/day08/example.txt" day08a ] unit-test
 { 512 } [ "vocab:advent2021/day08/data.txt" day08a ] unit-test
 
-{ t } [ 0b1110111 zero? ] unit-test
-{ f } [ 0b0100100 zero? ] unit-test
-{ f } [ 0b1110111 one? ] unit-test
-{ t } [ 0b0100100 one? ] unit-test
-{ t } [ 0b1100000 one? ] unit-test
-{ f } [ 0b0101011 seven? ] unit-test
-{ t } [ 0b1110000 seven? ] unit-test
-{ t } [ 0b0101010 seven? ] unit-test
+{ V{ 0 1 2 4 5 6 } } [ 0b1110111 bits ] unit-test
+{ V{ 2 5 } } [ 0b0100100 bits ] unit-test
+
+{ 0b1111101 } [ "gafbecd" 0 >pattern ] unit-test
+{ 0b0100100 } [ "gafbecd" 1 >pattern ] unit-test
 
 { {
-    { 31 31 31 31 31 31 31 }
-    { 96 96 96 96 96 96 96 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-} } [ 0b1100000 build-scratchpad mask-one ] unit-test
+    0b1111101 0b0100100 0b1111010 0b1101110 0b0100111
+    0b1001111 0b1011111 0b1100100 0b1111111 0b1101111
+} } [ "gafbecd" all-patterns ] unit-test
 
-{ }
-[ 100 {
-    { 31 31 31 31 31 31 31 }
-    { 96 96 96 96 96 96 96 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-    { 31 31 31 31 31 31 31 }
-} mask-seven ] unit-test
-
-{ V{ 1 } } [ 0b11 find-bit-count-match ] unit-test
-{ V{ 2 3 5 } } [ 0b0111110 find-bit-count-match ] unit-test
-
-{ }
+{ t }
 [
-    build-scratchpad
-    0b0010010
-    { 2 5 }
-    pick
-    set-segments
-]
-unit-test
+    "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab"
+    parse-pattern-seq
+    "deafgbc"
+    connections-match-input?
+] unit-test
+
+{ f }
+[
+    "egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg"
+    parse-pattern-seq
+    "deafgbc"
+    connections-match-input?
+] unit-test
+
+{ 5 }
+[
+    "cdfeb" parse-pattern "deafgbc" identify-pattern
+] unit-test
+
+{ { 5 3 5 3 } }
+[
+    "deafgbc"
+    "cdfeb fcadb cdfeb cdbaf" parse-pattern-seq
+    identify-patterns    
+] unit-test
+
+{ 5353 } [ { 5 3 5 3 } join>number ] unit-test
+{ 7429 } [ { 7 4 2 9 } join>number ] unit-test 
 
 { 5353 }
 [
@@ -105,7 +98,7 @@ unit-test
     parse-line
     solve-output
 ] unit-test
-{ 74 }
+{ 8394 }
 [
     "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe"
     parse-line
@@ -113,3 +106,4 @@ unit-test
 ] unit-test
 
 { 61229 } [ "vocab:advent2021/day08/example.txt" day08b ] unit-test
+{ 1091165 } [ "vocab:advent2021/day08/data.txt" day08b ] unit-test
