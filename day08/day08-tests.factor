@@ -1,6 +1,7 @@
 ! Copyright (C) 2022 Eric Rochester.
 ! See http://factorcode.org/license.txt for BSD license.
-USING: advent2021.day08 kernel sequences tools.test ;
+USING: advent2021.day08 kernel math.combinatorics sequences
+tools.test ;
 IN: advent2021.day08.tests
 
 { T{
@@ -63,28 +64,28 @@ unit-test
 
 { t }
 [
+    "deafgbc" all-patterns
     "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab"
     parse-pattern-seq
-    "deafgbc"
     connections-match-input?
 ] unit-test
 
 { f }
 [
+    "deafgbc" all-patterns
     "egadfb cdbfeg cegd fecab cgb gbdefca cg fgcdab egfdb bfceg"
     parse-pattern-seq
-    "deafgbc"
     connections-match-input?
 ] unit-test
 
 { 5 }
 [
-    "cdfeb" parse-pattern "deafgbc" identify-pattern
+    "cdfeb" parse-pattern "deafgbc" all-patterns identify-pattern
 ] unit-test
 
 { { 5 3 5 3 } }
 [
-    "deafgbc"
+    "deafgbc" all-patterns
     "cdfeb fcadb cdfeb cdbaf" parse-pattern-seq
     identify-patterns    
 ] unit-test
@@ -96,12 +97,14 @@ unit-test
 [
     "acedgfb cdfbe gcdfa fbcad dab cefabd cdfgeb eafb cagedb ab | cdfeb fcadb cdfeb cdbaf" 
     parse-line
+    "abcdefg" <permutations> [ all-patterns ] map
     solve-output
 ] unit-test
 { 8394 }
 [
     "be cfbegad cbdgef fgaecd cgeb fdcge agebfd fecdb fabcd edb | fdgacbe cefdb cefbgd gcbe"
     parse-line
+    "abcdefg" <permutations> [ all-patterns ] map
     solve-output
 ] unit-test
 

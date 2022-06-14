@@ -73,13 +73,13 @@ signal-pattern-index set-global
 : all-patterns ( connections -- seq )
     9 [0,b] [ dupd >pattern ] map nip ;
 
-: connections-match-input? ( input-seq connections -- ? )
-    all-patterns [ natural-sort ] bi@ = ;
+: connections-match-input? ( search-patterns input-seq -- ? )
+    [ natural-sort ] bi@ = ;
 
-: identify-pattern ( pattern connections -- n/f )
-    all-patterns swap [ = ] curry find drop ;
+: identify-pattern ( pattern search-pattern -- n/f )
+    swap [ = ] curry find drop ;
 
-: identify-patterns ( connections pattern-seq -- seq )
+: identify-patterns ( search-pattern pattern-seq -- seq )
     swap [ identify-pattern ] curry map ;
 
 : join>number ( seq -- n )
@@ -87,21 +87,16 @@ signal-pattern-index set-global
         10 swap ^ * +
     ] each-index ;
 
-: solve-output ( pattern -- n )
-    "abcdefg" <permutations> [
-        [ dup input-patterns>> ] dip
-        connections-match-input?
+: solve-output ( pattern search-patterns -- n )
+    [
+        over input-patterns>> connections-match-input?
     ] find
     nip
     swap output-values>> identify-patterns
     join>number ;
 
-! May be able to hoist generating the permutations and
-! calling `all-patterns` on them at this level and then
-! passing those pre-computed values down into both
-! `connections-match-input?` and `identify-pattern`,
-! which both need those values.
 : day08b ( path -- n )
     read-patterns
-    [ solve-output ] map
-    sum ;
+    "abcdefg" <permutations> [ all-patterns ] map
+    swap [ over solve-output ] map
+    sum nip ;
